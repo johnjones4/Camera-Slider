@@ -20,9 +20,6 @@ void HomeActor::step(SharedState* state)
   }
   else
   {
-#ifdef DEBUG
-    Serial.println("Homing shuttle");
-#endif
     this->tracking->step(-1);
   }
 }

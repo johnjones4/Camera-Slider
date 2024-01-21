@@ -1,7 +1,7 @@
 #ifndef PROGRAM_ACTOR
 #define PROGRAM_ACTOR
 
-#include "SliderStateActor.h"
+#include "../../include/SliderStateActor.h"
 #include "Stepper.h"
 
 class ProgramActor : public SliderStateActor

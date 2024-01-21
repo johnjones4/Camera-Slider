@@ -1,7 +1,7 @@
 #ifndef HOME_ACTOR
 #define HOME_ACTOR
 
-#include <SliderStateActor.h>
+#include <../../include/SliderStateActor.h>
 #include <Stepper.h>
 
 class HomeActor : public SliderStateActor

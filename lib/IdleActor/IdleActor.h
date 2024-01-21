@@ -1,7 +1,7 @@
 #ifndef IDLE_ACTOR
 #define IDLE_ACTOR
 
-#include <SliderStateActor.h>
+#include <../../include/SliderStateActor.h>
 #include <string.h>
 #include <BLEDevice.h>
 #include <BLEUtils.h>

@@ -25,7 +25,7 @@ typedef struct {
 class SliderStateActor
 {
 public:
-  void step(SharedState* state);
+  virtual void step(SharedState* state) = 0;
 };
 
 #endif

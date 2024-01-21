@@ -1,7 +1,7 @@
 #ifndef SLIDER_STATE_MACHINE
 #define SLIDER_STATE_MACHINE
 
-#include <SliderStateActor.h>
+#include <../../include/SliderStateActor.h>
 
 class SliderStateMachine
 {
