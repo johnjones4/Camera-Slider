@@ -22,13 +22,13 @@ void ProgramActor::step(SharedState* state)
     if (micros() - this->lastPanningStep >= this->panningStepRate) 
     {
       this->lastPanningStep = micros();
-      this->panning->step(1);
+      this->panning->step(false);
     }
 
     if (micros() - this->lastTrackingStep >= this->trackingStepRate) 
     {
       this->lastTrackingStep = micros();
-      this->tracking->step(1);
+      this->tracking->step(false);
       if (++this->trackingSteps >= MAX_TRACKING_STEPS)
       {
         state->state = IDLE;
