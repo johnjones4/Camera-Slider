@@ -1,8 +1,6 @@
 #include "IdleActor.h"
 #include <Arduino.h>
-
-#define MESSAGE_START 0xA4
-#define MESSAGE_BODY_LENGTH 8
+#include <../../include/consts.h>
 
 typedef union {
   uint8_t bytes[MESSAGE_BODY_LENGTH];
@@ -39,7 +37,9 @@ void IdleActor::step(SharedState* state)
 {
   if (!state->activeProgram && this->readBLE(state))
   {
+#ifdef DEBUG
     Serial.println("starting program");
+#endif
     state->state = PROGRAM;
   }
 }
@@ -61,7 +61,9 @@ bool IdleActor::readBLE(SharedState* state) {
   state->params = msg.params;
   state->activeProgram = true;
 
+#ifdef DEBUG
   Serial.printf("Panning RPM: %f\nTracking mps: %f\n", state->params.panningRpm, state->params.trackingMps);
+#endif
 
   this->pCharacteristic->setValue(0);
 

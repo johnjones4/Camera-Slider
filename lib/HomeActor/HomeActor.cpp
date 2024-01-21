@@ -1,5 +1,6 @@
 #include "HomeActor.h"
-#include "Arduino.h"
+#include <Arduino.h>
+#include <../../include/consts.h>
 
 HomeActor::HomeActor(Stepper *tracking, int homePin)
 {
@@ -12,11 +13,16 @@ void HomeActor::step(SharedState* state)
 {
   if (this->isHomed())
   {
-    Serial.println("now homed");
+#ifdef DEBUG
+    Serial.println("Now homed");
+#endif
     state->state = IDLE;
   }
   else
   {
+#ifdef DEBUG
+    Serial.println("Homing shuttle");
+#endif
     this->tracking->step(-1);
   }
 }
