@@ -16,6 +16,8 @@ ProgramActor program(&tracking, &panning);
 void setup() {
   Serial.begin(9600);
   Serial.println("Starting");
+  tracking.start();
+  panning.start();
   idle.start();
   ssm.registerActor(IDLE, &idle);
   ssm.registerActor(HOMING, &home);

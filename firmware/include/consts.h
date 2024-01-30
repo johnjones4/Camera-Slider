@@ -1,6 +1,6 @@
 #define DEBUG
 
-#define HOME_PIN 14
+#define HOME_PIN 18
 
 #define PERIPHERAL_NAME     "Camera Slider"
 #define SERVICE_UUID        "A7F7A363-1642-475A-8252-8BCE4C4289E9"
