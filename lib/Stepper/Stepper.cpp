@@ -68,6 +68,7 @@ void Stepper::stepMotor(int thisStep)
       digitalWrite(motor_pin_4, HIGH);
     break;
   }
+  delay(10);
 }
 
 /*

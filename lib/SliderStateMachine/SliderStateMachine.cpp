@@ -11,21 +11,26 @@ int SliderStateMachine::registerActor(SliderState state, SliderStateActor *actor
 int SliderStateMachine::step()
 {
 #ifdef DEBUG
-  Serial.print("Current mode: ");
-  switch (this->state.state)
-  {
-  case HOMING:
-    Serial.println("homing");
-    break;
-  case IDLE:
-    Serial.println("idle");
-    break;
-  case PROGRAM:
-    Serial.println("program");
-    break;
-  }
+  SliderState startingState = this->state.state;
 #endif
   SliderStateActor* actor = this->actors[this->state.state];
   actor->step(&(this->state));
+#ifdef DEBUG
+  if (startingState != this->state.state) {
+    Serial.print("New mode: ");
+    switch (this->state.state)
+    {
+    case HOMING:
+      Serial.println("homing");
+      break;
+    case IDLE:
+      Serial.println("idle");
+      break;
+    case PROGRAM:
+      Serial.println("program");
+      break;
+    }
+  }
+#endif
   return 0;
 }

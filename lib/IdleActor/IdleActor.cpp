@@ -22,7 +22,8 @@ void IdleActor::start()
   this->pCharacteristic = pService->createCharacteristic(
                                          this->characteristicUUID,
                                          BLECharacteristic::PROPERTY_READ |
-                                         BLECharacteristic::PROPERTY_WRITE
+                                         BLECharacteristic::PROPERTY_WRITE |
+                                         BLECharacteristic::PROPERTY_WRITE_NR
                                        );
   this->pService->start();
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
@@ -65,7 +66,7 @@ bool IdleActor::readBLE(SharedState* state) {
   Serial.printf("Panning RPM: %f\nTracking mps: %f\n", state->params.panningRpm, state->params.trackingMps);
 #endif
 
-  this->pCharacteristic->setValue(0);
+  this->pCharacteristic->setValue("");
 
   return true;
 }
