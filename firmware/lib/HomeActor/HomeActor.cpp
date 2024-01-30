@@ -20,7 +20,7 @@ void HomeActor::step(SharedState* state)
   }
   else
   {
-    this->tracking->step(true);
+    this->tracking->step(false);
   }
 }
 
