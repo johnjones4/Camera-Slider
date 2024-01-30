@@ -7,8 +7,8 @@
 #include <ProgramActor.h>
 
 SliderStateMachine ssm;
-Stepper tracking(STEPS_PER_ROTATION, TRACKING_PIN_1, TRACKING_PIN_2, TRACKING_PIN_3, TRACKING_PIN_4);
-Stepper panning(STEPS_PER_ROTATION, PANNING_PIN_1, PANNING_PIN_2, PANNING_PIN_3, PANNING_PIN_4);
+Stepper tracking(TRACKING_PIN_EN, TRACKING_PIN_STEP, TRACKING_PIN_DIR);
+Stepper panning(PANNING_PIN_EN, PANNING_PIN_STEP, PANNING_PIN_DIR);
 HomeActor home(&tracking, HOME_PIN);
 IdleActor idle(PERIPHERAL_NAME, SERVICE_UUID, CHARACTERISTIC_UUID);
 ProgramActor program(&tracking, &panning);
