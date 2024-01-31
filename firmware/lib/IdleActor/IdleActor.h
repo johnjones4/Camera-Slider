@@ -2,25 +2,14 @@
 #define IDLE_ACTOR
 
 #include <../../include/SliderStateActor.h>
-#include <string.h>
-#include <BLEDevice.h>
-#include <BLEUtils.h>
-#include <BLEScan.h>
-#include <BLEAdvertisedDevice.h>
-
+#include <BluetoothManager.h>
 class IdleActor : public SliderStateActor
 {
 public:
-  IdleActor(std::string peripheralName, std::string serviceUUID, std::string characteristicUUID);
+  IdleActor(BluetoothManager *btManager);
   void step(SharedState* state);
-  void start();
 private:
-  std::string peripheralName;
-  std::string serviceUUID;
-  std::string characteristicUUID;
-  BLEServer *pServer;
-  BLEService *pService;
-  BLECharacteristic *pCharacteristic;
+  BluetoothManager *btManager;
   bool readBLE(SharedState* state);
 };
 

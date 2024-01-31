@@ -2,6 +2,11 @@
 #include <Arduino.h>
 #include <../../include/consts.h>
 
+SliderStateMachine::SliderStateMachine(BluetoothManager *btManager)
+{
+  this->btManager = btManager;
+}
+
 int SliderStateMachine::registerActor(SliderState state, SliderStateActor *actor)
 {
   this->actors[state] = actor;
@@ -15,6 +20,10 @@ int SliderStateMachine::step()
 #endif
   SliderStateActor* actor = this->actors[this->state.state];
   actor->step(&(this->state));
+  if (millis() % 200 == 0)
+  {
+    btManager->updateState(this->state);
+  }
 #ifdef DEBUG
   if (startingState != this->state.state) {
     Serial.print("New mode: ");

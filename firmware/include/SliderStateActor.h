@@ -15,11 +15,11 @@ typedef struct {
   float panningRpm;
 } SlideParams;
 
-
 typedef struct {
-  SlideParams params;
-  bool activeProgram;
-  SliderState state;
+  SlideParams params; //8
+  short activeProgram; //2
+  SliderState state; //4
+  float percentComplete; //4
 } SharedState;
 
 class SliderStateActor

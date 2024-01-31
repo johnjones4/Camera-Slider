@@ -13,6 +13,8 @@ void ProgramActor::step(SharedState* state)
   if (state->activeProgram)
   {
     recalculateStepRates(state);
+
+    state->percentComplete = (float)this->trackingSteps / (float)MAX_TRACKING_STEPS;
     
     if (micros() - this->lastPanningStep >= this->panningStepRate) 
     {
@@ -33,6 +35,7 @@ void ProgramActor::step(SharedState* state)
     }
   } else {
     state->state = IDLE;
+    state->percentComplete = 0;
     this->panningStepRate = 0;
     this->trackingStepRate = 0;
     this->lastPanningStep = 0;
