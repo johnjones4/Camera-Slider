@@ -20,7 +20,7 @@ int SliderStateMachine::step()
 #endif
   SliderStateActor* actor = this->actors[this->state.state];
   actor->step(&(this->state));
-  if (millis() % 200 == 0)
+  if (millis() % 1000 == 0)
   {
     btManager->updateState(this->state);
   }

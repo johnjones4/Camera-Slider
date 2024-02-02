@@ -1,5 +1,7 @@
 #ifndef SLIDER_STATE_ACTOR
 #define SLIDER_STATE_ACTOR
+#include <Arduino.h>
+
 
 enum SliderState
 {
@@ -17,7 +19,7 @@ typedef struct {
 
 typedef struct {
   SlideParams params; //8
-  short activeProgram; //2
+  uint32_t activeProgram; //4
   SliderState state; //4
   float percentComplete; //4
 } SharedState;
