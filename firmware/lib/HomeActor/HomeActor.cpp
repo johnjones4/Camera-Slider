@@ -21,6 +21,7 @@ void HomeActor::step(SharedState* state)
   else
   {
     this->tracking->step(true);
+    delayMicroseconds(STEP_WAIT_MICROS);
   }
 }
 
