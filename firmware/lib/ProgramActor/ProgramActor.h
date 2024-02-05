@@ -17,6 +17,7 @@ private:
   unsigned long panningStepRate = 0;
   unsigned long lastPanningStep = 0;
   unsigned long trackingSteps = 0;
+  unsigned long programStart = 0;
   void recalculateStepRates(SharedState* state);
 };
 

@@ -26,8 +26,12 @@ void ProgramActor::step(SharedState* state)
     {
       this->lastTrackingStep = micros();
       this->tracking->step(false);
-      if (++this->trackingSteps >= MAX_TRACKING_STEPS)
+      this->trackingSteps++;
+      if (this->trackingSteps >= MAX_TRACKING_STEPS)
       {
+#ifdef DEBUG
+        Serial.printf("Completed %d steps in %d milliseconds\n", this->trackingSteps, millis()-this->programStart);
+#endif
         state->state = HOMING;
         state->activeProgram = false;
         state->percentComplete = 0;
@@ -36,6 +40,7 @@ void ProgramActor::step(SharedState* state)
         this->lastPanningStep = 0;
         this->lastTrackingStep = 0;
         this->trackingSteps= 0;
+        this->programStart = 0;
         return;
       }
     }
@@ -46,15 +51,18 @@ void ProgramActor::recalculateStepRates(SharedState* state)
 {
   if (this->panningStepRate == 0 && this->trackingStepRate == 0)
   {
-    float panningStepsPerMinute = STEPS_PER_ROTATION * state->params.panningRpm;
+    this->programStart = millis();
+    
+    long panningStepsPerMinute = STEPS_PER_ROTATION * state->params.panningRpm;
     this->panningStepRate = ONE_MINUTE_MICROS / panningStepsPerMinute;
 
-    float metersPerMinute = state->params.trackingMps * 60;
-    float rpm = metersPerMinute / SHAFT_CIRCUMFRENCE;
-    float trackingStepsPerMinute = STEPS_PER_ROTATION * rpm;
-    this->trackingStepRate = ONE_MINUTE_MICROS / trackingStepsPerMinute;
-
+    double millimetersPerSecond = state->params.trackingMps * 1000.0;
+    double stepsPerSecond = millimetersPerSecond / TRACKING_MILLIS_PER_STEP;
+    this->trackingStepRate = stepsPerSecond / 1000000;
 #ifdef DEBUG
+    Serial.printf("Panning steps per minute: %d\n", panningStepsPerMinute);
+    Serial.printf("Tracking millimeters per second: %f\n", millimetersPerSecond);
+    Serial.printf("Tracking steps per second: %f\n", stepsPerSecond);
     Serial.printf("recalulating speeds:\nPanning Steps: %d\nTracking steps: %d\n", this->panningStepRate, this->trackingStepRate);
 #endif
   }
