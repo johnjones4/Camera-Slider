@@ -14,32 +14,31 @@ void ProgramActor::step(SharedState* state)
   {
     recalculateStepRates(state);
 
-    state->percentComplete = (float)this->trackingSteps / (float)MAX_TRACKING_STEPS;
-    
+    state->percentComplete = (float)this->trackingSteps / (float)(MAX_TRACKING_STEPS);
+ 
     if (micros() - this->lastPanningStep >= this->panningStepRate) 
     {
       this->lastPanningStep = micros();
-      this->panning->step(true);
+      this->panning->step(false);
     }
 
     if (micros() - this->lastTrackingStep >= this->trackingStepRate) 
     {
       this->lastTrackingStep = micros();
-      this->tracking->step(true);
+      this->tracking->step(false);
       if (++this->trackingSteps >= MAX_TRACKING_STEPS)
       {
         state->state = HOMING;
         state->activeProgram = false;
+        state->percentComplete = 0;
+        this->panningStepRate = 0;
+        this->trackingStepRate = 0;
+        this->lastPanningStep = 0;
+        this->lastTrackingStep = 0;
+        this->trackingSteps= 0;
         return;
       }
     }
-  } else {
-    state->state = IDLE;
-    state->percentComplete = 0;
-    this->panningStepRate = 0;
-    this->trackingStepRate = 0;
-    this->lastPanningStep = 0;
-    this->lastTrackingStep = 0;
   }
 }
 

@@ -38,9 +38,6 @@ void BluetoothManager::start()
   this->service->start();
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
   pAdvertising->addServiceUUID(this->serviceUUID);
-  pAdvertising->setScanResponse(true);
-  pAdvertising->setMinPreferred(0x06);
-  pAdvertising->setMinPreferred(0x12);
   BLEDevice::startAdvertising();
 }
 
