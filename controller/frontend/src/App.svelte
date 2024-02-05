@@ -45,6 +45,7 @@
         pcnt = status.percentComplete
         mode = status.state
         if (status.state === 0 || status.state === 2) {
+          // TODO bug if program runs slowly
           setTimeout(() => updateStatus(), 100)
         }
       })
