@@ -1,5 +1,7 @@
 #include "Arduino.h"
 #include "Stepper.h"
+#include <../../include/consts.h>
+
 
 Stepper::Stepper(int enPin, int stepPin, int dirPin)
 {
@@ -25,7 +27,6 @@ void Stepper::step(bool forward)
 {
   digitalWrite(dirPin, forward ? LOW : HIGH);
   digitalWrite(stepPin, HIGH);
-  delay(1);
+  delayMicroseconds(STEP_WAIT_MICROS);
   digitalWrite(stepPin, LOW);
-  delay(1);
 }

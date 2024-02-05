@@ -58,7 +58,7 @@ void ProgramActor::recalculateStepRates(SharedState* state)
 
     double millimetersPerSecond = state->params.trackingMps * 1000.0;
     double stepsPerSecond = millimetersPerSecond / TRACKING_MILLIS_PER_STEP;
-    this->trackingStepRate = stepsPerSecond / 1000000;
+    this->trackingStepRate = 1000000 / stepsPerSecond;
 #ifdef DEBUG
     Serial.printf("Panning steps per minute: %d\n", panningStepsPerMinute);
     Serial.printf("Tracking millimeters per second: %f\n", millimetersPerSecond);
