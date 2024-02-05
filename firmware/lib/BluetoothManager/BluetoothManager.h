@@ -20,6 +20,7 @@ private:
   std::string serviceUUID;
   std::string programCharacteristicUUID;
   std::string statusCharacteristicUUID;
+  std::string lastParamValue = "";
   BLEServer *server;
   BLEService *service;
   BLECharacteristic *programCharacteristic;

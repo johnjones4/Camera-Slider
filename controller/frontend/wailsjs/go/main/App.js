@@ -10,10 +10,6 @@ export function Connected() {
   return window['go']['main']['App']['Connected']();
 }
 
-export function Connecting() {
-  return window['go']['main']['App']['Connecting']();
-}
-
 export function GetStatus() {
   return window['go']['main']['App']['GetStatus']();
 }

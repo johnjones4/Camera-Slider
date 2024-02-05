@@ -5,6 +5,8 @@ import (
 	"log"
 	"main/core"
 	"main/device/mock"
+	"main/device/real"
+	"os"
 )
 
 // App struct
@@ -21,7 +23,13 @@ func NewApp() *App {
 // startup is called when the app starts. The context is saved
 // so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
-	a.device = mock.New()
+	if os.Getenv("MOCK") != "" {
+		log.Println("Using mock device")
+		a.device = mock.New()
+	} else {
+		log.Println("Using real device")
+		a.device = real.New()
+	}
 	a.ctx = ctx
 }
 

@@ -49,9 +49,11 @@ bool BluetoothManager::readSliderParams(SlideParams *params)
   std::string value = this->programCharacteristic->getValue();
   const char* bytes = value.c_str();
   int l = value.length();
-  if (l != PARAMS_MESSAGE_BODY_LENGTH+1 || bytes[0] != MESSAGE_START) {
+  if (l != PARAMS_MESSAGE_BODY_LENGTH+1 || bytes[0] != MESSAGE_START || value.compare(lastParamValue) == 0) {
     return false;
   }
+  lastParamValue = value;
+  this->programCharacteristic->setValue("");
 
   SlideParamMessage msg;
   for (int i = 0; i < PARAMS_MESSAGE_BODY_LENGTH; i++)
@@ -64,8 +66,6 @@ bool BluetoothManager::readSliderParams(SlideParams *params)
 #ifdef DEBUG
   Serial.printf("Panning RPM: %f\nTracking mps: %f\n", msg.params.panningRpm, msg.params.trackingMps);
 #endif
-
-  this->programCharacteristic->setValue("");
 
   return true;
 }

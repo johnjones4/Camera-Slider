@@ -6,8 +6,6 @@ export function Connect():Promise<void>;
 
 export function Connected():Promise<boolean>;
 
-export function Connecting():Promise<boolean>;
-
 export function GetStatus():Promise<core.SliderStatus>;
 
 export function SendParams(arg1:core.SliderParams):Promise<void>;

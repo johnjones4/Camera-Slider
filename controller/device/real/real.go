@@ -5,6 +5,7 @@ import (
 	"log"
 	"main/core"
 	"sync"
+	"time"
 
 	"tinygo.org/x/bluetooth"
 )
@@ -32,10 +33,13 @@ func (d *RealDevice) SendParams(params core.SliderParams) error {
 		return nil
 	}
 
+	log.Printf("sending %d bytes", len(message))
+
 	_, err = d.programCharacteristic.WriteWithoutResponse(message)
 	if err != nil {
 		return err
 	}
+	time.Sleep(time.Second)
 
 	return nil
 }
@@ -47,6 +51,7 @@ func (d *RealDevice) GetStatus() (core.SliderStatus, error) {
 		return core.SliderStatus{}, err
 	}
 	trueBuffer := buffer[:length]
+	log.Printf("received %d bytes", len(trueBuffer))
 	return core.SliderStatusFromBytes(trueBuffer)
 }
 
@@ -54,6 +59,8 @@ func (d *RealDevice) Connect() error {
 	if d.Connected() {
 		return nil
 	}
+
+	log.Println("Connecting")
 
 	adapter := bluetooth.DefaultAdapter
 	err := adapter.Enable()
@@ -81,6 +88,7 @@ func (d *RealDevice) Connect() error {
 	err = adapter.Scan(func(adapter *bluetooth.Adapter, device bluetooth.ScanResult) {
 		log.Println(device.LocalName())
 		if device.LocalName() == "Camera Slider" && device.HasServiceUUID(serviceUUID) {
+			log.Println("Found device")
 			adapter.StopScan()
 			scanResultChan <- device
 		}
@@ -95,6 +103,8 @@ func (d *RealDevice) Connect() error {
 		return err
 	}
 
+	log.Println("Connected to device")
+
 	srvcs, err := device.DiscoverServices([]bluetooth.UUID{serviceUUID})
 	if err != nil {
 		return err
@@ -104,25 +114,33 @@ func (d *RealDevice) Connect() error {
 		return errors.New("service not found")
 	}
 
-	chars, err := srvcs[0].DiscoverCharacteristics([]bluetooth.UUID{programCharacteristicUUID, statusCharacteristicUUID})
+	log.Println("Loaded service")
+
+	chars, err := srvcs[0].DiscoverCharacteristics([]bluetooth.UUID{programCharacteristicUUID})
 	if err != nil {
 		return err
 	}
 
-	if len(chars) != 2 {
-		return errors.New("characteristics not found")
+	if len(chars) != 1 {
+		return errors.New("program characteristic not found")
 	}
 
-	d.characteristicLock.Lock()
-	for _, char := range chars {
-		switch char.UUID().String() {
-		case programCharacteristicUUID.String():
-			d.programCharacteristic = &char
-		case statusCharacteristicUUID.String():
-			d.statusCharacteristic = &char
-		}
+	d.programCharacteristic = &chars[0]
+
+	chars, err = srvcs[0].DiscoverCharacteristics([]bluetooth.UUID{statusCharacteristicUUID})
+	if err != nil {
+		return err
 	}
-	d.characteristicLock.Unlock()
+
+	if len(chars) != 1 {
+		return errors.New("program characteristic not found")
+	}
+
+	d.statusCharacteristic = &chars[0]
+
+	log.Println("Loaded characteristics")
+
+	log.Println("Done connecting")
 
 	return nil
 }

@@ -9,8 +9,8 @@
     2: 'Program'
   }
 
-  let tracking: number = 0.01
-  let panning: number = 0.01
+  let tracking: number = 0.1
+  let panning: number = 1
   let programRunning: boolean
   let pcnt: number
   let connecting: boolean

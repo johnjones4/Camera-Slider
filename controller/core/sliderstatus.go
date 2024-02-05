@@ -5,7 +5,7 @@ import (
 	"encoding/binary"
 )
 
-type SliderState int
+type SliderState int32
 
 const (
 	SliderStateHoming  = 0
@@ -34,17 +34,19 @@ func SliderStatusFromBytes(message []byte) (SliderStatus, error) {
 		return SliderStatus{}, err
 	}
 
-	var activeProgram int16
+	var activeProgram uint32
 	err = binary.Read(buffer, binary.LittleEndian, &activeProgram)
 	if err != nil {
 		return SliderStatus{}, err
 	}
 	s.ActiveProgram = activeProgram == 1
 
-	err = binary.Read(buffer, binary.LittleEndian, &s.State)
+	var state int32
+	err = binary.Read(buffer, binary.LittleEndian, &state)
 	if err != nil {
 		return SliderStatus{}, err
 	}
+	s.State = SliderState(state)
 
 	err = binary.Read(buffer, binary.LittleEndian, &s.PercentComplete)
 	if err != nil {
