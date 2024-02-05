@@ -19,13 +19,13 @@ void ProgramActor::step(SharedState* state)
     if (micros() - this->lastPanningStep >= this->panningStepRate) 
     {
       this->lastPanningStep = micros();
-      this->panning->step(true);
+      this->panning->step(false);
     }
 
     if (micros() - this->lastTrackingStep >= this->trackingStepRate) 
     {
       this->lastTrackingStep = micros();
-      this->tracking->step(true);
+      this->tracking->step(false);
       if (++this->trackingSteps >= MAX_TRACKING_STEPS)
       {
         state->state = HOMING;
