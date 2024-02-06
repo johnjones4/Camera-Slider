@@ -22,6 +22,7 @@ typedef struct {
   uint32_t activeProgram; //4
   SliderState state; //4
   float percentComplete; //4
+  long lastProgramTime; //8
 } SharedState;
 
 class SliderStateActor

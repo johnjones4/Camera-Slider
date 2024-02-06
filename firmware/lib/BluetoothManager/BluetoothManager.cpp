@@ -33,7 +33,8 @@ void BluetoothManager::start()
                                        );
   this->statusCharacteristic = service->createCharacteristic(
                                          this->statusCharacteristicUUID,
-                                         BLECharacteristic::PROPERTY_READ
+                                         BLECharacteristic::PROPERTY_READ |
+                                         BLECharacteristic::PROPERTY_NOTIFY
                                        );
   this->service->start();
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();

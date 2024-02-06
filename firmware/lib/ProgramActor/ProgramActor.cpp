@@ -29,8 +29,9 @@ void ProgramActor::step(SharedState* state)
       this->trackingSteps++;
       if (this->trackingSteps >= MAX_TRACKING_STEPS)
       {
+        state->lastProgramTime = millis()-this->programStart;
 #ifdef DEBUG
-        Serial.printf("Completed %d steps in %d milliseconds\n", this->trackingSteps, millis()-this->programStart);
+        Serial.printf("Completed %d steps in %d milliseconds\n", this->trackingSteps, state->lastProgramTime);
 #endif
         state->state = HOMING;
         state->activeProgram = false;
@@ -56,9 +57,9 @@ void ProgramActor::recalculateStepRates(SharedState* state)
     long panningStepsPerMinute = STEPS_PER_ROTATION * state->params.panningRpm;
     this->panningStepRate = ONE_MINUTE_MICROS / panningStepsPerMinute;
 
-    double millimetersPerSecond = state->params.trackingMps * 1000.0;
+    double millimetersPerSecond = state->params.trackingMps * ONE_METER_MILLIS;
     double stepsPerSecond = millimetersPerSecond / TRACKING_MILLIS_PER_STEP;
-    this->trackingStepRate = 1000000 / stepsPerSecond;
+    this->trackingStepRate = ONE_SECOND_MICROS / stepsPerSecond;
 #ifdef DEBUG
     Serial.printf("Panning steps per minute: %d\n", panningStepsPerMinute);
     Serial.printf("Tracking millimeters per second: %f\n", millimetersPerSecond);
