@@ -7,27 +7,27 @@ SliderStateMachine::SliderStateMachine(BluetoothManager *btManager)
   this->btManager = btManager;
 }
 
-int SliderStateMachine::registerActor(SliderState state, SliderStateActor *actor)
+int SliderStateMachine::registerActor(SliderMode mode, SliderStateActor *actor)
 {
-  this->actors[state] = actor;
+  this->actors[mode] = actor;
   return 0;
 }
 
 int SliderStateMachine::step()
 {
 #ifdef DEBUG
-  SliderState startingState = this->state.state;
+  SliderMode startingState = this->state.mode;
 #endif
-  SliderStateActor* actor = this->actors[this->state.state];
+  SliderStateActor* actor = this->actors[this->state.mode];
   actor->step(&(this->state));
-  if (startingState != this->state.state || millis() % 1000 == 0)
+  if (startingState != this->state.mode || millis() % 1000 == 0)
   {
     btManager->updateState(this->state);
   }
 #ifdef DEBUG
-  if (startingState != this->state.state) {
+  if (startingState != this->state.mode) {
     Serial.print("New mode: ");
-    switch (this->state.state)
+    switch (this->state.mode)
     {
     case HOMING:
       Serial.println("homing");

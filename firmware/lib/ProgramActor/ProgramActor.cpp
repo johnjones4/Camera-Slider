@@ -8,7 +8,7 @@ ProgramActor::ProgramActor(Stepper *tracking, Stepper *panning)
   this->panning = panning;
 }
 
-void ProgramActor::step(SharedState* state)
+void ProgramActor::step(SliderState* state)
 {
   if (state->activeProgram)
   {
@@ -33,7 +33,7 @@ void ProgramActor::step(SharedState* state)
 #ifdef DEBUG
         Serial.printf("Completed %d steps in %d milliseconds\n", this->trackingSteps, state->lastProgramTime);
 #endif
-        state->state = HOMING;
+        state->mode = HOMING;
         state->activeProgram = false;
         state->percentComplete = 0;
         this->panningStepRate = 0;
@@ -48,7 +48,7 @@ void ProgramActor::step(SharedState* state)
   }
 }
 
-void ProgramActor::recalculateStepRates(SharedState* state)
+void ProgramActor::recalculateStepRates(SliderState* state)
 {
   if (this->panningStepRate == 0 && this->trackingStepRate == 0)
   {

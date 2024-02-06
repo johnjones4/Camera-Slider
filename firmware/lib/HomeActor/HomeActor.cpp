@@ -9,14 +9,14 @@ HomeActor::HomeActor(Stepper *tracking, int homePin)
   pinMode(this->homePin, INPUT_PULLUP);
 }
 
-void HomeActor::step(SharedState* state)
+void HomeActor::step(SliderState* state)
 {
   if (this->isHomed())
   {
 #ifdef DEBUG
     Serial.println("Now homed");
 #endif
-    state->state = IDLE;
+    state->mode = IDLE;
   }
   else
   {

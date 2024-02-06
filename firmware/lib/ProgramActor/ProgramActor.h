@@ -1,14 +1,14 @@
 #ifndef PROGRAM_ACTOR
 #define PROGRAM_ACTOR
 
-#include "../../include/SliderStateActor.h"
+#include "../../include/types.h"
 #include "Stepper.h"
 
 class ProgramActor : public SliderStateActor
 {
 public:
   ProgramActor(Stepper *tracking, Stepper *panning);
-  void step(SharedState* state);
+  void step(SliderState* state);
 private:
   Stepper *tracking;
   Stepper *panning;
@@ -18,7 +18,7 @@ private:
   unsigned long lastPanningStep = 0;
   unsigned long trackingSteps = 0;
   unsigned long programStart = 0;
-  void recalculateStepRates(SharedState* state);
+  void recalculateStepRates(SliderState* state);
 };
 
 #endif

@@ -2,8 +2,7 @@
 #define SLIDER_STATE_ACTOR
 #include <Arduino.h>
 
-
-enum SliderState
+enum SliderMode
 {
   HOMING = 0,
   IDLE = 1,
@@ -20,15 +19,15 @@ typedef struct {
 typedef struct {
   SlideParams params; //8
   uint32_t activeProgram; //4
-  SliderState state; //4
+  SliderMode mode; //4
   float percentComplete; //4
   long lastProgramTime; //8
-} SharedState;
+} SliderState;
 
 class SliderStateActor
 {
 public:
-  virtual void step(SharedState* state) = 0;
+  virtual void step(SliderState* state) = 0;
 };
 
 #endif

@@ -1,16 +1,16 @@
 #ifndef IDLE_ACTOR
 #define IDLE_ACTOR
 
-#include <../../include/SliderStateActor.h>
+#include <../../include/types.h>
 #include <BluetoothManager.h>
 class IdleActor : public SliderStateActor
 {
 public:
   IdleActor(BluetoothManager *btManager);
-  void step(SharedState* state);
+  void step(SliderState* state);
 private:
   BluetoothManager *btManager;
-  bool readBLE(SharedState* state);
+  bool readBLE(SliderState* state);
 };
 
 #endif

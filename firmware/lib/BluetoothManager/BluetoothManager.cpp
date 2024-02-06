@@ -9,15 +9,15 @@ typedef union {
 
 typedef union {
   uint8_t bytes[STATUS_MESSAGE_BODY_LENGTH];
-  SharedState state;
+  SliderState state;
 } SlideStatusMessage;
 
-BluetoothManager::BluetoothManager(std::string peripheralName, std::string serviceUUID, std::string programCharacteristicUUID, std::string statusCharacteristicUUID)
+BluetoothManager::BluetoothManager(std::string peripheralName, std::string serviceUUID, std::string programCharacteristicUUID, std::string stateCharacteristicUUID)
 {
   this->peripheralName = peripheralName;
   this->serviceUUID = serviceUUID;
   this->programCharacteristicUUID = programCharacteristicUUID;
-  this->statusCharacteristicUUID = statusCharacteristicUUID;
+  this->stateCharacteristicUUID = stateCharacteristicUUID;
 }
 
 void BluetoothManager::start()
@@ -32,8 +32,8 @@ void BluetoothManager::start()
                                          BLECharacteristic::PROPERTY_WRITE |
                                          BLECharacteristic::PROPERTY_WRITE_NR
                                        );
-  this->statusCharacteristic = service->createCharacteristic(
-                                         this->statusCharacteristicUUID,
+  this->stateCharacteristic = service->createCharacteristic(
+                                         this->stateCharacteristicUUID,
                                          BLECharacteristic::PROPERTY_READ |
                                          BLECharacteristic::PROPERTY_NOTIFY
                                        );
@@ -48,10 +48,9 @@ bool BluetoothManager::readSliderParams(SlideParams *params)
   std::string value = this->programCharacteristic->getValue();
   const char* bytes = value.c_str();
   int l = value.length();
-  if (l != PARAMS_MESSAGE_BODY_LENGTH+1 || bytes[0] != MESSAGE_START || value.compare(lastParamValue) == 0) {
+  if (l != PARAMS_MESSAGE_BODY_LENGTH+1 || bytes[0] != MESSAGE_START) {
     return false;
   }
-  lastParamValue = value;
   this->programCharacteristic->setValue("");
 
   SlideParamMessage msg;
@@ -69,11 +68,12 @@ bool BluetoothManager::readSliderParams(SlideParams *params)
   return true;
 }
 
-void BluetoothManager::updateState(SharedState state)
+void BluetoothManager::updateState(SliderState state)
 {
   SlideStatusMessage msg;
   msg.state = state;
-  this->statusCharacteristic->setValue(msg.bytes, STATUS_MESSAGE_BODY_LENGTH);
+  this->stateCharacteristic->setValue(msg.bytes, STATUS_MESSAGE_BODY_LENGTH);
+  this->stateCharacteristic->notify(true);
 }
 
 void BluetoothManager::onConnect(BLEServer* pServer, esp_ble_gatts_cb_param_t *param)

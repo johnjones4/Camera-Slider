@@ -1,19 +1,19 @@
 #ifndef SLIDER_STATE_MACHINE
 #define SLIDER_STATE_MACHINE
 
-#include <../../include/SliderStateActor.h>
+#include <../../include/types.h>
 #include <BluetoothManager.h>
 class SliderStateMachine
 {
 public:
   SliderStateMachine(BluetoothManager *btManager);
   int step();
-  int registerActor(SliderState state, SliderStateActor *actor);
+  int registerActor(SliderMode mode, SliderStateActor *actor);
 private:
   BluetoothManager *btManager;
-  SharedState state = SharedState{
+  SliderState state = SliderState{
     activeProgram: false,
-    state: HOMING,
+    mode: HOMING,
   };
   SliderStateActor *actors[N_SLIDER_STATES];
 };
