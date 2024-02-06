@@ -6,8 +6,8 @@ import (
 )
 
 type SliderParams struct {
-	TrackingMps float32 `json:"trackingMps"`
-	PanningRpm  float32 `json:"panningRpm"`
+	TrackingMps float32
+	PanningRpm  float32
 }
 
 func (p SliderParams) Bytes() ([]byte, error) {

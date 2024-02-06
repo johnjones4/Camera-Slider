@@ -2,7 +2,6 @@ package core
 
 type Device interface {
 	SendParams(params SliderParams) error
-	GetStatus() (SliderStatus, error)
-	Connected() bool
-	Connect() error
+	SubscribeToState() (chan SliderState, chan error)
+	Connect() chan error
 }
