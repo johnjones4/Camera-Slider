@@ -24,6 +24,7 @@ void BluetoothManager::start()
 {
   BLEDevice::init(this->peripheralName);
   this->server = BLEDevice::createServer();
+  this->server->setCallbacks(this);
   this->service = this->server->createService(this->serviceUUID);
   this->programCharacteristic = service->createCharacteristic(
                                          this->programCharacteristicUUID,
@@ -73,4 +74,39 @@ void BluetoothManager::updateState(SharedState state)
   SlideStatusMessage msg;
   msg.state = state;
   this->statusCharacteristic->setValue(msg.bytes, STATUS_MESSAGE_BODY_LENGTH);
+}
+
+void BluetoothManager::onConnect(BLEServer* pServer)
+{
+#ifdef DEBUG
+  Serial.println("client connected");
+#endif
+}
+
+void BluetoothManager::onConnect(BLEServer* pServer, esp_ble_gatts_cb_param_t *param)
+{
+#ifdef DEBUG
+  Serial.println("client connected");
+#endif
+}
+
+void BluetoothManager::onDisconnect(BLEServer* pServer)
+{
+#ifdef DEBUG
+  Serial.println("client disconnected");
+#endif
+}
+
+void BluetoothManager::onDisconnect(BLEServer* pServer, esp_ble_gatts_cb_param_t *param)
+{
+#ifdef DEBUG
+  Serial.println("client disconnected");
+#endif
+}
+
+void BluetoothManager::onMtuChanged(BLEServer* pServer, esp_ble_gatts_cb_param_t* param)
+{
+#ifdef DEBUG
+  Serial.println("client mtu changed");
+#endif
 }
