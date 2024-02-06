@@ -87,7 +87,7 @@ connecting:
 			bar.Set(pcnt)
 			if started && !state.ActiveProgram {
 				bar.Clear()
-				log.Infof("Completed program in %f seconds\n", float64(state.LastProgramTime)/1000.0)
+				log.Infof("Completed program in %f seconds at %f mps\n", float64(state.LastProgramTime)/1000.0, state.LastEffectiveTrackingSpeed)
 				os.Exit(0)
 			}
 		case err := <-errChan:
