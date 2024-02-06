@@ -76,24 +76,10 @@ void BluetoothManager::updateState(SharedState state)
   this->statusCharacteristic->setValue(msg.bytes, STATUS_MESSAGE_BODY_LENGTH);
 }
 
-void BluetoothManager::onConnect(BLEServer* pServer)
-{
-#ifdef DEBUG
-  Serial.println("client connected");
-#endif
-}
-
 void BluetoothManager::onConnect(BLEServer* pServer, esp_ble_gatts_cb_param_t *param)
 {
 #ifdef DEBUG
   Serial.println("client connected");
-#endif
-}
-
-void BluetoothManager::onDisconnect(BLEServer* pServer)
-{
-#ifdef DEBUG
-  Serial.println("client disconnected");
 #endif
 }
 
@@ -102,6 +88,7 @@ void BluetoothManager::onDisconnect(BLEServer* pServer, esp_ble_gatts_cb_param_t
 #ifdef DEBUG
   Serial.println("client disconnected");
 #endif
+  BLEDevice::startAdvertising();
 }
 
 void BluetoothManager::onMtuChanged(BLEServer* pServer, esp_ble_gatts_cb_param_t* param)
