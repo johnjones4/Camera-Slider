@@ -16,23 +16,16 @@ const (
 	stateCharacteristicUUIDStr   = "9C282BA8-2BCE-4DF7-AA80-ED014C471B21"
 )
 
-type stateSubscriber struct {
-	state chan core.SliderState
-	err   chan error
-}
 type RealDevice struct {
 	programCharacteristic *bluetooth.DeviceCharacteristic
 	stateCharacteristic   *bluetooth.DeviceCharacteristic
 	characteristicLock    sync.Mutex
 	log                   logrus.FieldLogger
-	subscribers           []stateSubscriber
-	subscribersLock       sync.Mutex
 }
 
 func New(log logrus.FieldLogger) *RealDevice {
 	d := &RealDevice{
-		log:         log,
-		subscribers: make([]stateSubscriber, 0),
+		log: log,
 	}
 	return d
 }
@@ -54,29 +47,21 @@ func (d *RealDevice) SendParams(params core.SliderParams) error {
 	return nil
 }
 
-func (d *RealDevice) newStateData(buf []byte) {
-	d.log.Debugf("Received %d state bytes", len(buf))
-	state, err := core.SliderStateFromBytes(buf)
-	d.subscribersLock.Lock()
-	for _, s := range d.subscribers {
-		if err != nil {
-			s.err <- err
-		} else {
-			s.state <- state
-		}
-	}
-	d.subscribersLock.Unlock()
-}
-
 func (d *RealDevice) SubscribeToState() (chan core.SliderState, chan error) {
-	s := stateSubscriber{
-		state: make(chan core.SliderState),
-		err:   make(chan error),
-	}
-	d.subscribersLock.Lock()
-	d.subscribers = append(d.subscribers, s)
-	d.subscribersLock.Unlock()
-	return s.state, s.err
+	stateChan := make(chan core.SliderState)
+	errChan := make(chan error)
+	d.characteristicLock.Lock()
+	d.stateCharacteristic.EnableNotifications(func(buf []byte) {
+		d.log.Debugf("Received %d state bytes", len(buf))
+		state, err := core.SliderStateFromBytes(buf)
+		if err != nil {
+			errChan <- err
+		} else {
+			stateChan <- state
+		}
+	})
+	d.characteristicLock.Unlock()
+	return stateChan, errChan
 }
 
 func (d *RealDevice) Connect() chan error {
@@ -175,7 +160,6 @@ func (d *RealDevice) Connect() chan error {
 		}
 
 		d.stateCharacteristic = &chars[0]
-		d.stateCharacteristic.EnableNotifications(d.newStateData)
 
 		d.characteristicLock.Unlock()
 
