@@ -22,6 +22,7 @@ typedef struct {
   SliderMode mode; //4
   float percentComplete; //4
   long lastProgramTime; //8
+  SlideParams lastEffectiveSpeed; //8
 } SliderState;
 
 class SliderStateActor

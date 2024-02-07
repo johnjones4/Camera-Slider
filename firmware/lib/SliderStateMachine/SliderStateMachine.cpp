@@ -15,9 +15,7 @@ int SliderStateMachine::registerActor(SliderMode mode, SliderStateActor *actor)
 
 int SliderStateMachine::step()
 {
-#ifdef DEBUG
   SliderMode startingState = this->state.mode;
-#endif
   SliderStateActor* actor = this->actors[this->state.mode];
   actor->step(&(this->state));
   if (startingState != this->state.mode || millis() % 1000 == 0)
