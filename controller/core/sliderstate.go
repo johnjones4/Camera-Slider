@@ -14,12 +14,12 @@ const (
 )
 
 type SliderState struct {
-	Params                     SliderParams
-	ActiveProgram              bool
-	Mode                       SliderMode
-	PercentComplete            float32
-	LastProgramTime            int32
-	LastEffectiveTrackingSpeed float32
+	Params             SliderParams
+	ActiveProgram      bool
+	Mode               SliderMode
+	PercentComplete    float32
+	LastProgramTime    int32
+	LastEffectiveSpeed SliderParams
 }
 
 func SliderStateFromBytes(message []byte) (SliderState, error) {
@@ -60,7 +60,12 @@ func SliderStateFromBytes(message []byte) (SliderState, error) {
 		return SliderState{}, err
 	}
 
-	err = binary.Read(buffer, binary.LittleEndian, &s.LastEffectiveTrackingSpeed)
+	err = binary.Read(buffer, binary.LittleEndian, &s.LastEffectiveSpeed.TrackingMps)
+	if err != nil {
+		return SliderState{}, err
+	}
+
+	err = binary.Read(buffer, binary.LittleEndian, &s.LastEffectiveSpeed.PanningRpm)
 	if err != nil {
 		return SliderState{}, err
 	}
