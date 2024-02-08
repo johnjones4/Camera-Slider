@@ -18,13 +18,13 @@ typedef struct {
   
 typedef struct {
   SliderSpeed speed; // 8
-  bool rotationDirection; // 1
   float percentDistance; // 4
+  bool rotationDirection; // 4
 } SliderParams;
 
 typedef struct {
-  SliderParams params; // 13
-  bool activeProgram; // 1
+  SliderParams params; // 16
+  bool activeProgram; // 4
   SliderMode mode; // 4
   float percentComplete; // 4
   long lastProgramTime; // 8

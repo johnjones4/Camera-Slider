@@ -62,7 +62,7 @@ bool BluetoothManager::readSliderParams(SliderParams *params)
   *params = msg.params;
 
 #ifdef DEBUG
-  Serial.printf("Panning RPM: %f\nTracking mps: %f\nDirection: %d\nPercent:%f\n", msg.params.speed.panningRpm, msg.params.speed.trackingMps, msg.params.rotationDirection, msg.params.percentDistance);
+  Serial.printf("Panning RPM: %f\nTracking mps: %f\nDirection: %d\nPercent: %f\n", msg.params.speed.panningRpm, msg.params.speed.trackingMps, msg.params.rotationDirection, msg.params.percentDistance);
 #endif
 
   return true;
