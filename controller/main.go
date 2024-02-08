@@ -13,8 +13,10 @@ import (
 )
 
 func main() {
-	trackingSpeed := flag.Float64("t", 0.1, "Tracking speed (MPS)")
-	panningSpeed := flag.Float64("p", 1, "Panning speed (RPM)")
+	trackingSpeed := flag.Float64("t", 0.05, "Tracking speed (MPS)")
+	panningSpeed := flag.Float64("p", 0.5, "Panning speed (RPM)")
+	direction := flag.Bool("rd", false, "Direction (true == CCW)")
+	trackingDistance := flag.Float64("td", 1, "Tracking distance (0 - 1)")
 	useMock := flag.Bool("mock", false, "Mock devie")
 	logLevel := flag.String("loglevel", logrus.InfoLevel.String(), "Log level")
 	flag.Parse()
@@ -62,8 +64,12 @@ connecting:
 	}
 
 	err = device.SendParams(core.SliderParams{
-		TrackingMps: float32(*trackingSpeed),
-		PanningRpm:  float32(*panningSpeed),
+		Speed: core.SliderSpeed{
+			TrackingMps: float32(*trackingSpeed),
+			PanningRpm:  float32(*panningSpeed),
+		},
+		RotationDirection: *direction,
+		PercentDistance:   float32(*trackingDistance),
 	})
 	if err != nil {
 		log.Panic(err)

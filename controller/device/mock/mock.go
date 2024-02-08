@@ -34,7 +34,7 @@ func (d *MockDevice) SubscribeToState() (chan core.SliderState, chan error) {
 		ticker := time.NewTicker(time.Millisecond * 100)
 		for {
 			<-ticker.C
-			limit := time.Duration(0.6/d.state.Params.TrackingMps) * time.Second
+			limit := time.Duration(0.6/d.state.Params.Speed.TrackingMps) * time.Second
 			elapsed := time.Since(d.lastSend)
 			d.state.PercentComplete = float32(elapsed) / float32(limit)
 			if d.state.PercentComplete >= 1 {

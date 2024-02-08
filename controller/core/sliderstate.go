@@ -19,29 +19,49 @@ type SliderState struct {
 	Mode               SliderMode
 	PercentComplete    float32
 	LastProgramTime    int32
-	LastEffectiveSpeed SliderParams
+	LastEffectiveSpeed SliderSpeed
 }
 
 func SliderStateFromBytes(message []byte) (SliderState, error) {
 	var s SliderState
 	buffer := bytes.NewBuffer(message)
 
-	err := binary.Read(buffer, binary.LittleEndian, &s.Params.TrackingMps)
+	err := binary.Read(buffer, binary.LittleEndian, &s.Params.Speed.TrackingMps)
 	if err != nil {
 		return SliderState{}, err
 	}
 
-	err = binary.Read(buffer, binary.LittleEndian, &s.Params.PanningRpm)
+	err = binary.Read(buffer, binary.LittleEndian, &s.Params.Speed.PanningRpm)
 	if err != nil {
 		return SliderState{}, err
 	}
 
-	var activeProgram uint32
-	err = binary.Read(buffer, binary.LittleEndian, &activeProgram)
+	var rd uint32 = 0
+	err = binary.Read(buffer, binary.LittleEndian, &rd)
 	if err != nil {
 		return SliderState{}, err
 	}
-	s.ActiveProgram = activeProgram == 1
+	if rd == 1 {
+		s.Params.RotationDirection = true
+	} else {
+		s.Params.RotationDirection = false
+	}
+
+	err = binary.Read(buffer, binary.LittleEndian, &s.Params.PercentDistance)
+	if err != nil {
+		return SliderState{}, err
+	}
+
+	var ap uint32 = 0
+	err = binary.Read(buffer, binary.LittleEndian, &ap)
+	if err != nil {
+		return SliderState{}, err
+	}
+	if ap == 1 {
+		s.ActiveProgram = true
+	} else {
+		s.ActiveProgram = false
+	}
 
 	var mode int32
 	err = binary.Read(buffer, binary.LittleEndian, &mode)
