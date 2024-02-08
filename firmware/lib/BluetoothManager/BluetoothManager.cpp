@@ -4,7 +4,7 @@
 
 typedef union {
   uint8_t bytes[PARAMS_MESSAGE_BODY_LENGTH];
-  SlideParams params;
+  SliderParams params;
 } SlideParamMessage;
 
 typedef union {
@@ -43,7 +43,7 @@ void BluetoothManager::start()
   BLEDevice::startAdvertising();
 }
 
-bool BluetoothManager::readSliderParams(SlideParams *params)
+bool BluetoothManager::readSliderParams(SliderParams *params)
 {
   std::string value = this->programCharacteristic->getValue();
   const char* bytes = value.c_str();
@@ -62,7 +62,7 @@ bool BluetoothManager::readSliderParams(SlideParams *params)
   *params = msg.params;
 
 #ifdef DEBUG
-  Serial.printf("Panning RPM: %f\nTracking mps: %f\n", msg.params.panningRpm, msg.params.trackingMps);
+  Serial.printf("Panning RPM: %f\nTracking mps: %f\nDirection: %d\nPercent:%f\n", msg.params.speed.panningRpm, msg.params.speed.trackingMps, msg.params.rotationDirection, msg.params.percentDistance);
 #endif
 
   return true;

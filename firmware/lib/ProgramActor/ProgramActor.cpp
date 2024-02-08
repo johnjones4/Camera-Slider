@@ -14,12 +14,13 @@ void ProgramActor::step(SliderState* state)
   {
     recalculateStepRates(state);
 
-    bool completedProgram = this->trackingSteps >= MAX_TRACKING_STEPS;
+    unsigned long maxSteps = (unsigned long)((float)MAX_TRACKING_STEPS * state->params.percentDistance);
+    bool completedProgram = this->trackingSteps >= maxSteps;
 
     if (completedProgram && this->panningSteps == this->totalPanningSteps) {
       state->lastProgramTime = millis()-this->programStart;
       float seconds = ((float)state->lastProgramTime/1000.0);
-      state->lastEffectiveSpeed.trackingMps = ((float)SHAFT_LENGTH_MILLIS/1000.0) / seconds;
+      state->lastEffectiveSpeed.trackingMps = ((float)(SHAFT_LENGTH_MILLIS*state->params.percentDistance)/1000.0) / seconds;
       state->lastEffectiveSpeed.panningRpm = ((float)this->totalPanningSteps / ((float)STEPS_PER_ROTATION * (float)PANNING_GEAR_RATIO)) / (seconds/60.0);
   #ifdef DEBUG
       Serial.printf("Completed %d steps in %d milliseconds\n", this->trackingSteps, state->lastProgramTime);
@@ -39,7 +40,7 @@ void ProgramActor::step(SliderState* state)
       this->totalPanningSteps = 0;
       return;
     } else if (completedProgram && this->panningSteps <= this->totalPanningSteps) {
-      this->panning->step(true);
+      this->panning->step(!state->params.rotationDirection);
       this->panningSteps--;
       delayMicroseconds(STEP_WAIT_MICROS);
     } else {
@@ -49,7 +50,7 @@ void ProgramActor::step(SliderState* state)
       if (panningStepWaited >= STEP_WAIT_MICROS && panningStepWaited >= this->panningStepRate) 
       {
         this->lastPanningStep = micros();
-        this->panning->step(false);
+        this->panning->step(state->params.rotationDirection);
         this->panningSteps++;
         this->totalPanningSteps++;
       }
@@ -71,10 +72,10 @@ void ProgramActor::recalculateStepRates(SliderState* state)
   {
     this->programStart = millis();
     
-    long panningStepsPerMinute = STEPS_PER_ROTATION * PANNING_GEAR_RATIO * state->params.panningRpm;
+    long panningStepsPerMinute = STEPS_PER_ROTATION * PANNING_GEAR_RATIO * state->params.speed.panningRpm;
     this->panningStepRate = ONE_MINUTE_MICROS / panningStepsPerMinute;
 
-    double millimetersPerSecond = state->params.trackingMps * ONE_METER_MILLIS;
+    double millimetersPerSecond = state->params.speed.trackingMps * ONE_METER_MILLIS;
     double stepsPerSecond = millimetersPerSecond / TRACKING_MILLIS_PER_STEP;
     this->trackingStepRate = ONE_SECOND_MICROS / stepsPerSecond;
 #ifdef DEBUG

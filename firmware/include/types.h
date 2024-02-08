@@ -14,15 +14,21 @@ enum SliderMode
 typedef struct {
   float trackingMps;
   float panningRpm;
-} SlideParams;
+} SliderSpeed;
+  
+typedef struct {
+  SliderSpeed speed; // 8
+  bool rotationDirection; // 1
+  float percentDistance; // 4
+} SliderParams;
 
 typedef struct {
-  SlideParams params; //8
-  uint32_t activeProgram; //4
-  SliderMode mode; //4
-  float percentComplete; //4
-  long lastProgramTime; //8
-  SlideParams lastEffectiveSpeed; //8
+  SliderParams params; // 13
+  bool activeProgram; // 1
+  SliderMode mode; // 4
+  float percentComplete; // 4
+  long lastProgramTime; // 8
+  SliderSpeed lastEffectiveSpeed; // 8
 } SliderState;
 
 class SliderStateActor
