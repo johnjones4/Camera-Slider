@@ -40,7 +40,7 @@ void ProgramActor::step(SliderState* state)
       this->totalPanningSteps = 0;
       return;
     } else if (completedProgram && this->panningSteps <= this->totalPanningSteps) {
-      this->panning->step(!state->params.rotationDirection);
+      this->panning->step(state->params.rotationDirection == 1 ? false : true);
       this->panningSteps--;
       delayMicroseconds(STEP_WAIT_MICROS);
     } else {
@@ -50,7 +50,7 @@ void ProgramActor::step(SliderState* state)
       if (panningStepWaited >= STEP_WAIT_MICROS && panningStepWaited >= this->panningStepRate) 
       {
         this->lastPanningStep = micros();
-        this->panning->step(state->params.rotationDirection);
+        this->panning->step(state->params.rotationDirection == 1 ? true : false);
         this->panningSteps++;
         this->totalPanningSteps++;
       }

@@ -19,7 +19,7 @@ typedef struct {
 typedef struct {
   SliderSpeed speed; // 8
   float percentDistance; // 4
-  bool rotationDirection; // 4
+  int rotationDirection; // 4
 } SliderParams;
 
 typedef struct {
