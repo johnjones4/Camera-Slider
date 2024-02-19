@@ -15,7 +15,7 @@ import (
 func main() {
 	trackingSpeed := flag.Float64("t", 0.05, "Tracking speed (MPS)")
 	panningSpeed := flag.Float64("p", 0.5, "Panning speed (RPM)")
-	direction := flag.Bool("rd", false, "Direction (true == CCW)")
+	direction := flag.Bool("ccw", false, "Direction (true == CCW)")
 	trackingDistance := flag.Float64("td", 1, "Tracking distance (0 - 1)")
 	useMock := flag.Bool("mock", false, "Mock devie")
 	logLevel := flag.String("loglevel", logrus.InfoLevel.String(), "Log level")
